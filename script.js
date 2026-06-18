@@ -1,93 +1,37 @@
-document.addEventListener('DOMContentLoaded', () => {
+/* --- New Image Helper Adjustments --- */
+.main-profile-img {
+    width: 280px;
+    height: 280px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 5px solid var(--primary-color);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
 
-    // --- Dark/Light Mode Engine ---
-    const themeToggle = document.getElementById('theme-toggle');
-    const toggleIcon = themeToggle.querySelector('i');
-    
-    const currentTheme = localStorage.getItem('theme') || 'light';
-    document.documentElement.setAttribute('data-theme', currentTheme);
-    updateThemeIcon(currentTheme);
+.image-about-grid {
+    display: grid;
+    grid-template-columns: 0.8fr 1.2fr;
+    gap: 3rem;
+    align-items: center;
+}
 
-    themeToggle.addEventListener('click', () => {
-        let theme = document.documentElement.getAttribute('data-theme');
-        let newTheme = (theme === 'dark') ? 'light' : 'dark';
-        
-        document.documentElement.setAttribute('data-theme', newTheme);
-        localStorage.setItem('theme', newTheme);
-        updateThemeIcon(newTheme);
-    });
+.about-featured-img {
+    width: 100%;
+    max-height: 400px;
+    border-radius: 12px;
+    object-fit: cover;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
 
-    function updateThemeIcon(theme) {
-        if (theme === 'dark') {
-            toggleIcon.className = 'fas fa-sun';
-        } else {
-            toggleIcon.className = 'fas fa-moon';
-        }
+/* For smaller screens, stack the about image cleanly */
+@media (max-width: 968px) {
+    .image-about-grid {
+        grid-template-columns: 1fr;
+        text-align: center;
     }
-
-    // --- Responsive Navigation Drawer ---
-    const hamburger = document.querySelector('.hamburger');
-    const navMenu = document.querySelector('.nav-menu');
-    const navLinks = document.querySelectorAll('.nav-link');
-
-    hamburger.addEventListener('click', () => {
-        hamburger.classList.toggle('active');
-        navMenu.classList.toggle('active');
-    });
-
-    navLinks.forEach(link => {
-        link.addEventListener('click', () => {
-            hamburger.classList.remove('active');
-            navMenu.classList.remove('active');
-        });
-    });
-
-    // --- Active Link Observer on Scroll ---
-    const sections = document.querySelectorAll('section');
+    .about-featured-img {
+        max-width: 320px;
+        margin-bottom: 2rem;
+    }
+}
     
-    window.addEventListener('scroll', () => {
-        let current = '';
-        sections.forEach(section => {
-            const sectionTop = section.offsetTop;
-            const sectionHeight = section.clientHeight;
-            if (window.pageYOffset >= (sectionTop - sectionHeight / 3)) {
-                current = section.getAttribute('id');
-            }
-        });
-
-        navLinks.forEach(link => {
-            link.classList.remove('active');
-            if (link.getAttribute('href').includes(current)) {
-                link.classList.add('active');
-            }
-        });
-    });
-
-    // --- Accordion Mechanics for FAQ Section ---
-    const faqQuestions = document.querySelectorAll('.faq-question');
-
-    faqQuestions.forEach(question => {
-        question.addEventListener('click', () => {
-            const item = question.parentElement;
-            
-            if (item.classList.contains('active')) {
-                item.classList.remove('active');
-            } else {
-                document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('active'));
-                item.classList.add('active');
-            }
-        });
-    });
-
-    // --- Contact Form Submission Handling ---
-    const contactForm = document.getElementById('contact-form');
-    
-    contactForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        
-        const name = document.getElementById('name').value;
-        alert(`Thank you, ${name}! Your message has been compiled successfully. Aakash will get back to you soon.`);
-        
-        contactForm.reset();
-    });
-});
